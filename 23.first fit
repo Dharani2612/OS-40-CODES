@@ -1,0 +1,33 @@
+#include<stdio.h>
+void firstfit(int bno,int pno,int ps[],int bs[]){
+    int i,j;
+    for(i=0;i<bno;i++){
+        for(j=0;j<pno;j++){
+            if(ps[j]<=bs[i]){
+                printf("Theprocess %d is allocated to %d block\n",j,bs[i]);
+                ps[j]=10000;
+                break;
+            }
+        }
+    }
+    for(i=0;i<pno;i++){
+        if(ps[i]!=10000){
+            printf("The process %d is not allocated",j);
+        }
+    }
+}
+int main(){
+    int bno,pno,bs[20],ps[20],i,j;
+    printf("Enter no of Blocks.\n");
+    scanf("%d",&bno);
+    for(i=0;i<bno;i++){
+        printf("Enter the %dst Block size:",i);
+        scanf("%d",&bs[i]);
+    }
+    printf("Enter no of Process.\n");
+    scanf("%d",&pno);
+    for(i=0;i<pno;i++){
+        printf("Enter the size of %dst Process:",i);
+        scanf("%d",&ps[i]);
+    }
+}
