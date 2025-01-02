@@ -1,0 +1,70 @@
+#include <stdio.h>
+
+#define MAX 10
+
+// Function to calculate waiting time and turnaround time using SRTF
+void calculateSRTF(int n, int arrival_time[], int burst_time[]) {
+    int remaining_burst_time[MAX], completion_time[MAX];
+    int waiting_time[MAX], turnaround_time[MAX];
+    int is_completed[MAX] = {0};
+    int time = 0, completed = 0;
+    
+    // Copy burst times to remaining burst time
+    for (int i = 0; i < n; i++) {
+        remaining_burst_time[i] = burst_time[i];
+    }
+
+    // Run the SRTF algorithm
+    while (completed < n) {
+        int min_burst_time = 1000;
+        int process_index = -1;
+        
+        // Find the process with the shortest remaining burst time
+        for (int i = 0; i < n; i++) {
+            if (arrival_time[i] <= time && !is_completed[i] && remaining_burst_time[i] < min_burst_time) {
+                min_burst_time = remaining_burst_time[i];
+                process_index = i;
+            }
+        }
+
+        // If no process is ready to run, just increment time
+        if (process_index == -1) {
+            time++;
+            continue;
+        }
+
+        // Process the selected process
+        remaining_burst_time[process_index]--;
+        
+        // If the process is completed
+        if (remaining_burst_time[process_index] == 0) {
+            completed++;
+            is_completed[process_index] = 1;
+            completion_time[process_index] = time + 1;
+            turnaround_time[process_index] = completion_time[process_index] - arrival_time[process_index];
+            waiting_time[process_index] = turnaround_time[process_index] - burst_time[process_index];
+        }
+        
+        time++;
+    }
+
+    // Output the results
+    printf("Process\tArrival Time\tBurst Time\tCompletion Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++) {
+        printf("P%d\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, arrival_time[i], burst_time[i], completion_time[i], waiting_time[i], turnaround_time[i]);
+    }
+}
+
+int main() {
+    // Define the number of processes
+    int n = 4;
+
+    // Given arrival times and burst times for processes
+    int arrival_time[] = {0, 1, 2, 4}; // Arrival times of P1, P2, P3, P4
+    int burst_time[] = {5, 3, 3, 1};   // Burst times of P1, P2, P3, P4
+
+    // Call function to calculate SRTF results
+    calculateSRTF(n, arrival_time, burst_time);
+
+    return 0;
+}
